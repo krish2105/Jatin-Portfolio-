@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Convenience copies of the resumes at the project root, refreshed by
+# `npm run resume`. The canonical, served copies live in public/resume/.
+/Jatin_Acharya_Resume.pdf
+/Jatin_Acharya_Resume_ERP_ML.pdf

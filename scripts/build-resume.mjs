@@ -8,7 +8,7 @@
  * because it gives real font shaping and selectable text — an applicant
  * tracking system has to be able to read this.
  */
-import { writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { writeFileSync, mkdirSync, existsSync, copyFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { tmpdir } from "node:os";
@@ -51,5 +51,12 @@ for (const variant of VARIANTS) {
     { stdio: "pipe" },
   );
 
-  console.log(`built ${variant.file}`);
+  /* A convenience copy at the project root, so the PDFs are one click away
+     when the folder is opened. Refreshed on every build for the same reason
+     the resume is generated rather than hand-edited: a copy that has to be
+     updated by hand is a copy that goes stale. Git-ignored — the canonical,
+     committed, served copy is the one in public/resume. */
+  copyFileSync(pdfPath, join(root, variant.file));
+
+  console.log(`built ${variant.file}  (public/resume/ + project root)`);
 }

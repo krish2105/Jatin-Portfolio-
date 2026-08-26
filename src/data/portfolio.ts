@@ -411,10 +411,10 @@ export const skillGroups: readonly SkillGroup[] = [
     id: "learning",
     label: "Learning",
     items: [
-      "Data Fundamentals (IBM)",
-      "Design and Analysis of Algorithms (NPTEL)",
-      "Database Management Systems (Oracle)",
       "NetSuite ERP Implementation",
+      "Database Management Systems (Oracle)",
+      "Design and Analysis of Algorithms (NPTEL)",
+      "Retrieval-augmented systems over enterprise data",
     ],
   },
 ];

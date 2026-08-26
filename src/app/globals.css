@@ -28,6 +28,19 @@
   --accent-ink: #2dd4bf; /* 10.64:1 on ground */
   --signature: #c9a227;
 
+  /* Filled-button pair. Both resolve to tokens already declared above; they
+     exist so the pairing can differ per theme without any component knowing.
+     Dark: accent on ground = 10.64:1. */
+  --accent-solid: var(--accent);
+  --accent-on: var(--ground);
+
+  /* Stroke weights for the jaali fallback. Brass on near-black carries at a
+     low alpha; on a light ground it needs more to read at all. */
+  --lattice-edge: 0.46;
+  --lattice-tie: 0.26;
+  --lattice-field: 0.32;
+  --lattice-node: 0.4;
+
   --scrim: 0 0% 2%;
   --shadow-key: 0 0 0;
   --shadow-strength: 0.55;
@@ -43,6 +56,16 @@
   --accent: #0d9488;
   --accent-ink: #0a6e66; /* 5.74:1 on ground — accent itself is 3.54:1 */
   --signature: #8c6d12;
+
+  /* Light: accent-ink on surface = 6.11:1. The raw accent would be 3.77:1
+     against white, which fails for button labels at this size. */
+  --accent-solid: var(--accent-ink);
+  --accent-on: var(--surface);
+
+  --lattice-edge: 0.8;
+  --lattice-tie: 0.5;
+  --lattice-field: 0.5;
+  --lattice-node: 0.55;
 
   --scrim: 210 20% 12%;
   --shadow-key: 12 20 32;
@@ -65,6 +88,8 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
+  --color-accent-solid: var(--accent-solid);
+  --color-accent-on: var(--accent-on);
   --color-signature: var(--signature);
 
   --font-display: var(--font-bricolage), "Geist Sans", system-ui, sans-serif;
@@ -108,6 +133,11 @@
   html {
     -webkit-text-size-adjust: 100%;
     scrollbar-gutter: stable;
+    /* Must sit on <html>, not only <body>: the Builds swipe gallery is a
+       nested horizontal scroller, and its content width still reaches the
+       viewport scroll box when only body clips. With this the page never
+       scrolls sideways while the gallery still swipes. */
+    overflow-x: clip;
   }
 
   body {
@@ -209,6 +239,26 @@
     #000 94%,
     transparent
   );
+}
+
+/* --------------------------------------------------------------------------
+   Static jaali fallback — a slow CSS-only drift so the hero is not dead when
+   WebGL is unavailable. Killed by the reduced-motion guard below.
+   -------------------------------------------------------------------------- */
+
+.lattice-float {
+  animation: lattice-float 26s var(--ease-in-out-cubic) infinite alternate;
+  transform-origin: center;
+  will-change: transform;
+}
+
+@keyframes lattice-float {
+  from {
+    transform: translate3d(0, -0.6%, 0) scale(0.985) rotate(-0.4deg);
+  }
+  to {
+    transform: translate3d(0, 0.6%, 0) scale(1.015) rotate(0.4deg);
+  }
 }
 
 /* --------------------------------------------------------------------------

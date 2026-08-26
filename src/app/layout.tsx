@@ -4,6 +4,9 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 
 import { noFlashScript } from "@/lib/theme";
+import { SmoothScroll } from "@/components/ui/SmoothScroll";
+import { Preloader } from "@/components/ui/Preloader";
+import { Cursor } from "@/components/ui/Cursor";
 import { profile, siteMeta } from "@/data/portfolio";
 import "./globals.css";
 
@@ -130,7 +133,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {children}
+        <Preloader />
+        <Cursor />
+        <SmoothScroll>{children}</SmoothScroll>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}

@@ -1,5 +1,6 @@
 import { now, profile, skillGroups } from "@/data/portfolio";
 import { Section } from "@/components/ui/Section";
+import { Reveal } from "@/components/ui/Reveal";
 
 const learning = skillGroups.find((group) => group.id === "learning")!;
 const languages = skillGroups.find((group) => group.id === "languages")!;
@@ -8,16 +9,17 @@ export function Now() {
   return (
     <Section id="now" number="07" label="Now">
       <div className="mt-12 grid gap-12 md:mt-16 lg:grid-cols-12 lg:gap-16">
-        <div className="lg:col-span-7">
+        <Reveal className="lg:col-span-7">
           <p className="max-w-[54ch] text-xl leading-relaxed text-text md:text-2xl md:leading-relaxed">
             {now.body}
           </p>
           <p className="mt-8 max-w-[56ch] leading-relaxed text-muted">
             {now.open}
           </p>
-        </div>
+        </Reveal>
 
-        <dl className="grid gap-8 self-start lg:col-span-4 lg:col-start-9">
+        <Reveal delay={0.12} as="div" className="self-start lg:col-span-4 lg:col-start-9">
+        <dl className="grid gap-8">
           <div>
             <dt className="u-mono text-2xs uppercase tracking-[0.28em] text-muted">
               Based in
@@ -57,6 +59,7 @@ export function Now() {
             </dd>
           </div>
         </dl>
+        </Reveal>
       </div>
     </Section>
   );

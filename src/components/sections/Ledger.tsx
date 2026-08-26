@@ -1,6 +1,7 @@
 import { education, experience } from "@/data/portfolio";
 import type { ExperienceEntry, ExperienceRole } from "@/types/portfolio";
 import { Section } from "@/components/ui/Section";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * Experience as a statement of account. Mono throughout, hairline rules,
@@ -19,7 +20,7 @@ export function Ledger() {
           {experience.map((entry) => (
             <LedgerEntry key={entry.id} entry={entry} />
           ))}
-          <li className="border-b border-edge py-8 md:py-10">
+          <Reveal as="li" className="border-b border-edge py-8 md:py-10">
             <div className="grid gap-3 lg:grid-cols-12 lg:gap-6">
               <div className="lg:col-span-8">
                 <h3 className="font-display text-xl md:text-2xl">
@@ -37,7 +38,7 @@ export function Ledger() {
                 <p className="mt-2 text-text">{education.result}</p>
               </div>
             </div>
-          </li>
+          </Reveal>
         </ol>
       </div>
     </Section>
@@ -54,7 +55,7 @@ function LedgerEntry({ entry }: { entry: ExperienceEntry }) {
       : entry.roles[0].period;
 
   return (
-    <li className="border-b border-edge py-8 md:py-10">
+    <Reveal as="li" className="border-b border-edge py-8 md:py-10">
       <div className="grid gap-3 lg:grid-cols-12 lg:gap-6">
         <div className="lg:col-span-8">
           <h3 className="flex flex-wrap items-center gap-3 font-display text-xl md:text-2xl">
@@ -89,7 +90,7 @@ function LedgerEntry({ entry }: { entry: ExperienceEntry }) {
           {entry.skills.join(" · ")}
         </p>
       )}
-    </li>
+    </Reveal>
   );
 }
 

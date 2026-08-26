@@ -88,12 +88,14 @@ function Field({
       if (!u) return;
       u.uAccent.value = readColor("--accent", "#2dd4bf");
       u.uSignature.value = readColor("--signature", "#c9a227");
-      // Brass needs more presence against a light ground, exactly as in the
-      // SVG fallback.
+      // The point cloud is far denser than the SVG line drawing, so it needs
+      // the opposite adjustment: on a light ground the same alphas read as a
+      // solid wall of pattern competing with the copy, not as a screen behind
+      // it. Lighter here, heavier in the SVG.
       const light =
         document.documentElement.getAttribute("data-theme") === "light";
-      u.uEdgeAlpha.value = light ? 0.9 : 0.72;
-      u.uFieldAlpha.value = light ? 0.45 : 0.3;
+      u.uEdgeAlpha.value = light ? 0.5 : 0.72;
+      u.uFieldAlpha.value = light ? 0.24 : 0.3;
     };
     sync();
     const observer = new MutationObserver(sync);

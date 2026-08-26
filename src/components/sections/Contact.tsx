@@ -4,6 +4,8 @@ import { contact, profile } from "@/data/portfolio";
 import { Section } from "@/components/ui/Section";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { GitHubMark, LinkedInMark } from "@/components/ui/BrandIcons";
+import { SplitText } from "@/components/ui/SplitText";
+import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 
 export function Contact() {
   return (
@@ -16,12 +18,14 @@ export function Contact() {
             fontVariationSettings: '"wght" 600, "wdth" 88, "opsz" 72',
           }}
         >
-          {contact.heading}
+          <SplitText text={contact.heading} />
         </p>
 
-        <p className="mt-6 max-w-[46ch] text-lg text-muted">{contact.sub}</p>
+        <Reveal delay={0.2}>
+          <p className="mt-6 max-w-[46ch] text-lg text-muted">{contact.sub}</p>
+        </Reveal>
 
-        <div className="mt-10 flex flex-wrap items-center gap-4">
+        <Reveal delay={0.28} className="mt-10 flex flex-wrap items-center gap-4">
           <MagneticButton href={`mailto:${contact.email}`}>
             <Mail aria-hidden size={17} strokeWidth={1.8} />
             {contact.email}
@@ -35,9 +39,9 @@ export function Contact() {
             Download resume
             <Download aria-hidden size={16} strokeWidth={1.6} />
           </a>
-        </div>
+        </Reveal>
 
-        <ul className="mt-14 grid gap-px overflow-hidden border border-edge bg-edge sm:grid-cols-3">
+        <RevealGroup as="ul" className="mt-14 grid gap-px overflow-hidden border border-edge bg-edge sm:grid-cols-3">
           <ContactRow
             label="LinkedIn"
             value="jatin-acharya"
@@ -55,7 +59,7 @@ export function Contact() {
             value={profile.phone}
             href={`tel:${profile.phone.replace(/\s/g, "")}`}
           />
-        </ul>
+        </RevealGroup>
       </div>
     </Section>
   );
@@ -74,7 +78,7 @@ function ContactRow({
 }) {
   const external = href.startsWith("http");
   return (
-    <li className="bg-surface">
+    <RevealItem as="li" className="bg-surface">
       <a
         href={href}
         {...(external
@@ -98,6 +102,6 @@ function ContactRow({
           )}
         </span>
       </a>
-    </li>
+    </RevealItem>
   );
 }

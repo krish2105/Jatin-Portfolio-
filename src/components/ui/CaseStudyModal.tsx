@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
 
 import type { BuildProject } from "@/types/portfolio";
@@ -26,17 +27,26 @@ export function CaseStudyModal({
   onClose: () => void;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
   useFocusTrap(Boolean(project), panelRef, onClose);
 
-  if (!project) return null;
-
   return (
-    <div
+    <AnimatePresence>
+      {project && (
+    <motion.div
       className="fixed inset-0 z-[160] flex items-start justify-center overflow-y-auto bg-ground/90 p-4 md:p-8"
       onClick={onClose}
+      initial={reduce ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={reduce ? undefined : { opacity: 0 }}
+      transition={{ duration: 0.25 }}
     >
-      <div
+      <motion.div
         ref={panelRef}
+        initial={reduce ? false : { opacity: 0, y: 24, scale: 0.985 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={reduce ? undefined : { opacity: 0, y: 14, scale: 0.99 }}
+        transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
         role="dialog"
         aria-modal="true"
         aria-labelledby="case-study-title"
@@ -110,7 +120,9 @@ export function CaseStudyModal({
             View source
           </a>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

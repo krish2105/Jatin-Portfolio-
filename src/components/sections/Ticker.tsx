@@ -1,11 +1,16 @@
+"use client";
+
+import { motion, useReducedMotion } from "motion/react";
 import { ticker } from "@/data/portfolio";
 
 /**
- * Static in Phase 2 — Phase 4 sets the track in motion. The list is duplicated
- * so the animated loop has a seamless second half; the duplicate is hidden
- * from assistive tech.
+ * Seamless marquee: the list is rendered twice and the track travels exactly
+ * -50%, so the second copy lands where the first began. The duplicate is
+ * hidden from assistive tech. Static under reduced motion.
  */
 export function Ticker() {
+  const reduce = useReducedMotion();
+
   return (
     <section
       id="ticker"
@@ -13,9 +18,14 @@ export function Ticker() {
       className="relative border-t border-edge py-6 md:py-8"
     >
       <div className="mask-edges overflow-hidden">
-        <ul
-          data-ticker-track
-          className="flex w-max items-center gap-10 whitespace-nowrap md:gap-14"
+        <motion.ul
+          className="flex w-max items-center gap-10 whitespace-nowrap will-change-transform md:gap-14"
+          animate={reduce ? undefined : { x: ["0%", "-50%"] }}
+          transition={
+            reduce
+              ? undefined
+              : { duration: 42, ease: "linear", repeat: Infinity }
+          }
         >
           {ticker.map((item) => (
             <TickerItem key={item} label={item} />
@@ -23,7 +33,7 @@ export function Ticker() {
           {ticker.map((item) => (
             <TickerItem key={`dup-${item}`} label={item} duplicate />
           ))}
-        </ul>
+        </motion.ul>
       </div>
     </section>
   );

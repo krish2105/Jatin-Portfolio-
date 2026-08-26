@@ -1,6 +1,7 @@
 import { skillGroups, stacks } from "@/data/portfolio";
 import { Section } from "@/components/ui/Section";
 import { LensDivider } from "@/components/ui/LensDivider";
+import { Reveal } from "@/components/ui/Reveal";
 
 const systems = stacks.find((s) => s.id === "systems")!;
 const models = stacks.find((s) => s.id === "models")!;
@@ -27,22 +28,24 @@ export function TwoStacks() {
         </div>
 
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-0">
-          <StackPanelBlock
-            label={systems.label}
-            body={systems.body}
-            skills={systemsSkills.items}
-            className="lg:pr-14 xl:pr-20"
-          />
+          <Reveal className="lg:pr-14 xl:pr-20">
+            <StackPanelBlock
+              label={systems.label}
+              body={systems.body}
+              skills={systemsSkills.items}
+            />
+          </Reveal>
           <div
             aria-hidden
             className="h-px w-full bg-edge lg:hidden"
           />
-          <StackPanelBlock
-            label={models.label}
-            body={models.body}
-            skills={modelsSkills.items}
-            className="lg:pl-14 xl:pl-20"
-          />
+          <Reveal delay={0.12} className="lg:pl-14 xl:pl-20">
+            <StackPanelBlock
+              label={models.label}
+              body={models.body}
+              skills={modelsSkills.items}
+            />
+          </Reveal>
         </div>
 
         {/* The seam. Sits centred on the divider, where the two columns meet. */}
@@ -51,7 +54,7 @@ export function TwoStacks() {
             aria-hidden
             className="absolute -top-14 left-1/2 hidden h-14 w-px -translate-x-1/2 bg-gradient-to-b from-edge to-accent/60 lg:block"
           />
-          <div className="mx-auto max-w-[62ch] border border-edge bg-surface p-8 text-center md:p-12">
+          <Reveal delay={0.1} className="mx-auto max-w-[62ch] border border-edge bg-surface p-8 text-center md:p-12">
             <p className="u-mono flex items-center justify-center gap-3 text-2xs uppercase tracking-[0.3em] text-accent-ink">
               <span aria-hidden className="h-1.5 w-1.5 rotate-45 border border-accent" />
               {seam.label}
@@ -59,7 +62,7 @@ export function TwoStacks() {
             <p className="mt-6 text-balance text-xl leading-snug text-text md:text-2xl">
               {seam.body}
             </p>
-          </div>
+          </Reveal>
         </div>
       </div>
     </Section>
@@ -70,15 +73,13 @@ function StackPanelBlock({
   label,
   body,
   skills,
-  className,
 }: {
   label: string;
   body: string;
   skills: readonly string[];
-  className?: string;
 }) {
   return (
-    <div className={className}>
+    <div>
       <h3 className="u-mono text-sm uppercase tracking-[0.32em] text-text">
         {label}
       </h3>

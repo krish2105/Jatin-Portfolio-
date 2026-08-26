@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { navItems, profile } from "@/data/portfolio";
@@ -18,13 +19,18 @@ export function MobileMenu({
   onClose: () => void;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
   useFocusTrap(open, panelRef, onClose);
 
-  if (!open) return null;
-
   return (
-    <div
+    <AnimatePresence>
+      {open && (
+    <motion.div
       ref={panelRef}
+      initial={reduce ? false : { y: "-100%" }}
+      animate={{ y: "0%" }}
+      exit={reduce ? undefined : { y: "-100%" }}
+      transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
       role="dialog"
       aria-modal="true"
       aria-label="Site navigation"
@@ -78,6 +84,8 @@ export function MobileMenu({
           {profile.location}
         </p>
       </div>
-    </div>
+    </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

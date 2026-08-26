@@ -262,6 +262,27 @@
 }
 
 /* --------------------------------------------------------------------------
+   Preloader — the name draws itself in stroke.
+   -------------------------------------------------------------------------- */
+
+.preloader-name {
+  font-family: var(--font-display);
+  font-size: 92px;
+  font-variation-settings: "wght" 600, "wdth" 84, "opsz" 96;
+  letter-spacing: 0.02em;
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: preloader-draw 1.05s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes preloader-draw {
+  to {
+    stroke-dashoffset: 0;
+    fill: var(--text);
+  }
+}
+
+/* --------------------------------------------------------------------------
    Theme transition — circular wipe from the toggle (View Transitions API)
    -------------------------------------------------------------------------- */
 

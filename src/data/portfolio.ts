@@ -343,7 +343,9 @@ export const navItems: readonly NavItem[] = [
 ];
 
 export const siteMeta = {
-  url: "https://jatinacharya.vercel.app",
+  // Change this when a custom domain is attached — canonical URL, Open Graph,
+  // JSON-LD and sitemap.xml all derive from it.
+  url: "https://jatin-portfolio-krishnamathur008-1499s-projects.vercel.app",
   title: `${profile.name} — ${profile.role}`,
   description:
     "Oracle NetSuite Functional Consultant and AI/ML engineer. I implement the enterprise systems companies run on, and build the computer-vision models that make them smarter.",

@@ -25,9 +25,11 @@ function readColor(name: string, fallback: string) {
 
 function Field({
   lowPower,
+  active,
   onDegrade,
 }: {
   lowPower: boolean;
+  active: boolean;
   onDegrade: () => void;
 }) {
   const points = useRef<THREE.Points>(null);
@@ -139,7 +141,7 @@ function Field({
   const rotation = useRef(0);
 
   useFrame((state, delta) => {
-    if (document.hidden) return;
+    if (document.hidden || !active) return;
 
     const dt = Math.min(delta, 0.05);
     const now = performance.now();
@@ -230,10 +232,13 @@ function Field({
 
 export default function JaaliField({
   lowPower,
+  active,
   onDegrade,
   onReady,
 }: {
   lowPower: boolean;
+  /** False when the hero is off-screen: the loop stops, the scene stays. */
+  active: boolean;
   onDegrade: () => void;
   onReady: () => void;
 }) {
@@ -243,9 +248,14 @@ export default function JaaliField({
       camera={{ position: [0, 0, 11], fov: 42 }}
       gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
       style={{ pointerEvents: "none" }}
+      // "never" halts the render loop entirely — no rAF, no draw calls, no GPU
+      // work — while keeping the context and its buffers alive. That is the
+      // whole point of the performance rule; unmounting to achieve it was
+      // crashing the page (see HeroLattice).
+      frameloop={active ? "always" : "never"}
       onCreated={onReady}
     >
-      <Field lowPower={lowPower} onDegrade={onDegrade} />
+      <Field lowPower={lowPower} active={active} onDegrade={onDegrade} />
     </Canvas>
   );
 }

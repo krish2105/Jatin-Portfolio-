@@ -66,29 +66,48 @@ export function HeroLattice({ className }: { className?: string }) {
 
   const handleReady = useCallback(() => setSceneReady(true), []);
 
-  const use3D = webgl && !reduce && !degraded;
-  const showScene = use3D && inView;
+  /* Once the scene has mounted it is never unmounted again.
+     
+     Tearing down R3F's Canvas as the hero scrolled out raced React's own
+     removal of the surrounding nodes: each tried to remove a node the other
+     had already taken, and the resulting NotFoundError did not just log — it
+     propagated and unmounted the entire page, leaving a blank document. It
+     reproduced reliably on scroll-past-and-back, in production.
+
+     `active` now carries the intent instead: the render loop stops dead when
+     the hero leaves the viewport (frameloop="never" — no rAF, no draw calls,
+     no GPU work), and the context simply idles. Holding one idle context
+     costs nothing measurable; crashing the page costs everything. */
+  const use3D = webgl && !reduce;
+  const active = use3D && inView && !degraded;
+  const showScene = use3D && (sceneReady || inView);
 
   return (
     <div ref={container} aria-hidden className={className}>
       <div
         className={cn(
           "absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
-          showScene && sceneReady ? "opacity-0" : "opacity-100",
+          active && sceneReady ? "opacity-0" : "opacity-100",
         )}
       >
         <StaticLattice animate={!reduce} />
       </div>
 
-      {showScene && (
-        <div className="absolute inset-0">
+      <div
+        className={cn(
+          "absolute inset-0 transition-opacity duration-700",
+          active ? "opacity-100" : "opacity-0",
+        )}
+      >
+        {showScene && (
           <JaaliField
             lowPower={lowPower}
+            active={active}
             onDegrade={handleDegrade}
             onReady={handleReady}
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

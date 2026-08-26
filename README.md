@@ -247,7 +247,7 @@ ways.
 | `prefers-reduced-motion` | Static SVG, no float animation |
 | Frame time > 20ms for 2s | Drops to the SVG, permanently for that page load |
 | `hardwareConcurrency <= 4` or `deviceMemory <= 4` | 3D at 3,000 points, no cursor displacement |
-| Hero scrolled out of view | Scene unmounted, WebGL context released |
+| Hero scrolled out of view | Render loop stopped (`frameloop="never"` — no rAF, no draw calls, no GPU work). The context idles; it is not torn down |
 | `document.hidden` | Render loop paused |
 
 `dpr` is capped at `[1, 2]`. The scene is `next/dynamic` with `ssr: false`, so
@@ -309,6 +309,15 @@ equal and the travel distance came out as zero.
 **`overflow-x: clip` has to sit on `<html>`**, not only `<body>`. The Builds
 swipe gallery is a nested horizontal scroller whose content still reached the
 viewport scroll box, and the page scrolled sideways at 360px.
+
+**Never unmount the R3F Canvas.** The scene used to be torn down when the
+hero scrolled out of view. That raced React's own removal of the surrounding
+nodes — each tried to remove a node the other had already taken, and the
+resulting `NotFoundError` did not merely log: it propagated and unmounted the
+entire page, leaving a blank document. It reproduced reliably on
+scroll-past-and-back, in production. The loop is paused instead. Holding one
+idle WebGL context costs nothing measurable; crashing the page costs
+everything.
 
 **The hero entrance is CSS, not Motion, and must stay that way.** The first
 version animated from `opacity: 0` with Motion, which meant the name, the copy

@@ -22,6 +22,7 @@ export function NetSuiteDelivery() {
 
   return (
     <Section id="delivery" number="04" label="NetSuite Delivery">
+      <div aria-hidden className="atmo atmo-section -top-24 left-[-12%]" />
       <Reveal className="mt-12 md:mt-16">
         <p className="max-w-[58ch] text-xl leading-relaxed text-text md:text-2xl md:leading-relaxed">
           An ERP implementation is seven distinct jobs wearing one job title.
@@ -66,7 +67,7 @@ export function NetSuiteDelivery() {
           })}
         </ol>
 
-        <div className="mt-8 grid gap-8 border border-edge bg-surface p-6 md:p-9 lg:grid-cols-12 lg:gap-12">
+        <div className="panel washed relative mt-8 grid gap-8 p-6 md:p-9 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-7">
             <p className="u-mono text-2xs uppercase tracking-[0.28em] text-accent-ink">
               Stage {stage.index} · {stage.name}
@@ -111,7 +112,7 @@ export function NetSuiteDelivery() {
 
         <ul className="mt-8 grid gap-px overflow-hidden border border-edge bg-edge md:grid-cols-2">
           {netsuiteModules.map((module) => (
-            <li key={module.id} className="bg-surface p-6 md:p-7">
+            <li key={module.id} className="bg-raised p-6 md:p-7">
               <h4 className="font-display text-xl md:text-2xl">{module.name}</h4>
               <p className="mt-3 max-w-[46ch] text-sm leading-relaxed text-muted">
                 {module.scope}

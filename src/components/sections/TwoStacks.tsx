@@ -54,7 +54,7 @@ export function TwoStacks() {
             aria-hidden
             className="absolute -top-14 left-1/2 hidden h-14 w-px -translate-x-1/2 bg-gradient-to-b from-edge to-accent/60 lg:block"
           />
-          <Reveal delay={0.1} className="mx-auto max-w-[62ch] border border-edge bg-surface p-8 text-center md:p-12">
+          <Reveal delay={0.1} className="panel washed relative mx-auto max-w-[62ch] p-8 text-center md:p-12">
             <p className="u-mono flex items-center justify-center gap-3 text-2xs uppercase tracking-[0.3em] text-accent-ink">
               <span aria-hidden className="h-1.5 w-1.5 rotate-45 border border-accent" />
               {seam.label}

@@ -65,7 +65,7 @@ export function CaseStudyModal({
         aria-labelledby="case-study-title"
         tabIndex={-1}
         onClick={(event) => event.stopPropagation()}
-        className="relative my-auto w-full max-w-3xl border border-edge bg-surface p-6 outline-none md:p-10"
+        className="panel relative my-auto w-full max-w-3xl p-6 outline-none md:p-10"
       >
         <button
           type="button"

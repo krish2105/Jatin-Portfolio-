@@ -129,7 +129,7 @@ function BuildCard({
   const leadLabel = mode === "recruiter" ? "Result" : "Approach";
 
   return (
-    <article className="group flex h-full flex-col border border-edge bg-surface p-6 transition-colors hover:border-accent/50 md:p-7">
+    <article className="panel washed group flex h-full flex-col p-6 transition-colors hover:border-accent/50 md:p-7">
       <p className="u-mono flex items-center gap-3 text-2xs uppercase tracking-[0.24em] text-muted">
         <span className="text-accent-ink">{project.index}</span>
         <span aria-hidden className="h-px w-6 bg-edge" />

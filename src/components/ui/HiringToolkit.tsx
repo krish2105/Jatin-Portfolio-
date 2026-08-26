@@ -36,7 +36,7 @@ export function HiringToolkit() {
   };
 
   return (
-    <div className="mt-16 border border-edge bg-surface p-6 md:mt-20 md:p-9">
+    <div className="panel washed relative mt-16 p-6 md:mt-20 md:p-9">
       <h3 className="u-mono flex items-center gap-3 text-2xs">
         <span aria-hidden className="h-px w-8 bg-edge" />
         <span className="uppercase tracking-[0.3em] text-muted">

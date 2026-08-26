@@ -11,6 +11,7 @@ import { HiringToolkit } from "@/components/ui/HiringToolkit";
 export function Contact() {
   return (
     <Section id="contact" number="09" label="Contact">
+      <div aria-hidden className="atmo atmo-section right-[-10%] top-8" />
       <div className="mt-12 md:mt-16">
         <p
           className="max-w-[16ch] font-display leading-[0.92]"

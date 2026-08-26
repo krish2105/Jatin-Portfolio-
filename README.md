@@ -128,9 +128,30 @@ Measured contrast, both themes:
 The theme is an attribute on `<html data-theme="dark|light">`, written **before
 first paint** by a blocking inline script in the layout, so there is no flash.
 It persists to `localStorage` and respects `prefers-color-scheme` on first
-visit. The toggle expands a circular wipe from the button using the View
-Transitions API, falling back to an instant swap where unsupported or under
-reduced motion.
+visit.
+
+The toggle sweeps a clip-path circle of the incoming background colour out from
+the button, swaps the theme underneath once it covers the viewport, then drops
+the overlay. It **deliberately does not use the View Transitions API**: that
+snapshots the entire viewport twice to animate what is only ever a colour
+change, and this page has a multi-megapixel WebGL canvas in it. Measured on a
+laptop the old version's worst frame was 25ms; the overlay is 9ms, and on a
+large display the gap is far wider. Instant swap under reduced motion, and if
+the animation never fires the theme still applies — the animation is never
+load-bearing.
+
+### Depth in dark mode
+
+Elevation comes from surface lightness, not shadow — a shadow on near-black is
+invisible. The ladder is `ground` → `surface` → `raised`, each step a slightly
+lighter blue-tinted grey, plus a 1px inner top highlight (`--edge-light`) that
+implies a light source. Large panels carry a faint directional wash so they are
+not one dead flat value corner to corner, soft accent glows sit behind content
+at no more than 0.16 alpha, and a film-grain overlay breaks up the banding that
+dark gradients produce on 8-bit panels.
+
+Measured worst-case body contrast after all of it: **4.87:1 dark, 5.37:1
+light**.
 
 ---
 
@@ -223,8 +244,12 @@ exactly what will happen before it happens.
 One React Three Fiber particle system, ~9,500 points (~2,800 on low-power
 devices), doing four things:
 
-1. **At rest** — the points settle into a jaali lattice and rotate on Y at
-   0.05 rad/s. Structural edges emit brass; field points are teal.
+1. **At rest** — the points settle into a jaali lattice and oscillate on Y at
+   a peak 0.05 rad/s. Structural edges emit brass; field points are teal.
+   The rotation oscillates rather than spinning through a full revolution: the
+   lattice is a flat plane, so a continuous spin turned it edge-on twice per
+   revolution and the hero collapsed to a thin vertical band for seconds at a
+   time.
 2. **Cursor as depth sensor** — points near the pointer displace along +Z with
    a smooth falloff, like a depth map responding to a hand entering frame.
    After 4s without pointer movement a slow ambient wave takes over.

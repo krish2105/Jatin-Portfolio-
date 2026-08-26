@@ -14,8 +14,14 @@ export interface Vec2 {
   y: number;
 }
 
-export const LATTICE_COLS = 8;
-export const LATTICE_ROWS = 8;
+/* A jaali screen is a fine perforated stone panel, not a wall of big tiles.
+   At 8x8 each cell rendered ~250px wide on a large display and the whole
+   thing read as coarse wallpaper. 14x14 went too far the other way: with the
+   point budget spread that thin the octagons stopped resolving and the field
+   read as random dust. 11x11 is the balance — noticeably finer, still a
+   lattice. */
+export const LATTICE_COLS = 11;
+export const LATTICE_ROWS = 11;
 
 /** Regular octagon, flat-topped, inscribed in a circle of radius `r`. */
 export function octagonPoints(cx: number, cy: number, r: number): Vec2[] {
@@ -160,9 +166,12 @@ function samplePolyline(
  * to `extent` world units. Structural edges (octagons and ties) are flagged so
  * the shader can light them in brass; everything else is teal field.
  */
-export function buildLatticeCloud(target: number, extent = 6): LatticeCloud {
-  const cols = LATTICE_COLS;
-  const rows = LATTICE_ROWS;
+export function buildLatticeCloud(
+  target: number,
+  extent = 6,
+  cols = LATTICE_COLS,
+  rows = LATTICE_ROWS,
+): LatticeCloud {
   const size = 800;
   const cell = size / cols;
   const octR = cell * 0.42;
@@ -229,14 +238,27 @@ export function buildLatticeCloud(target: number, extent = 6): LatticeCloud {
   const scale = extent / size;
   const half = size / 2;
 
+  /* Deterministic scatter. Perfectly-on-the-line points make the lattice look
+     printed; nudging each one off its ideal position makes it read as a field
+     of particles that happens to describe a lattice — which is what a point
+     cloud of a real object looks like. Hash-based, so the same field renders
+     on every load. */
+  const jitter = (i: number, salt: number) => {
+    const n = Math.sin(i * 127.1 + salt * 311.7) * 43758.5453;
+    return (n - Math.floor(n)) - 0.5;
+  };
+  // Enough to break the printed-line look, not enough to dissolve the shape.
+  const spread = extent * 0.005;
+
   for (let i = 0; i < count; i += 1) {
-    positions[i * 3] = (pts[i].x - half) * scale;
+    positions[i * 3] = (pts[i].x - half) * scale + jitter(i, 1) * spread;
     // SVG y grows downward, world y grows up.
-    positions[i * 3 + 1] = -(pts[i].y - half) * scale;
+    positions[i * 3 + 1] = -(pts[i].y - half) * scale + jitter(i, 2) * spread;
     // A shallow, deterministic depth ripple so the screen reads as carved
-    // stone with relief rather than a flat decal.
+    // stone with relief rather than a flat decal, plus scatter in Z.
     positions[i * 3 + 2] =
-      Math.sin(pts[i].x * 0.018) * Math.cos(pts[i].y * 0.018) * extent * 0.05;
+      Math.sin(pts[i].x * 0.018) * Math.cos(pts[i].y * 0.018) * extent * 0.05 +
+      jitter(i, 3) * spread * 2.5;
     edgeFlags[i] = flags[i];
   }
 

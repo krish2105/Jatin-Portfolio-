@@ -10,8 +10,11 @@ import { fieldFragmentShader, fieldVertexShader } from "./shaders";
 import { isPinching } from "@/lib/heroSignals";
 
 const EXTENT = 6;
-const FULL_POINTS = 10_000;
+const FULL_POINTS = 11_000;
 const LOW_POINTS = 3_000;
+/* Fewer cells on low-power devices keeps the point budget honest — the
+   sampler has a per-cell floor, so cutting the target alone would not. */
+const LOW_GRID = 10;
 /** No pointer movement for this long and the ambient wave takes over. */
 const IDLE_MS = 4_000;
 
@@ -37,10 +40,9 @@ function Field({
   const { size, viewport } = useThree();
 
   const geometry = useMemo(() => {
-    const lattice = buildLatticeCloud(
-      lowPower ? LOW_POINTS : FULL_POINTS,
-      EXTENT,
-    );
+    const lattice = lowPower
+      ? buildLatticeCloud(LOW_POINTS, EXTENT, LOW_GRID, LOW_GRID)
+      : buildLatticeCloud(FULL_POINTS, EXTENT);
     const hand = buildHandCloud(lattice.count, EXTENT);
 
     const seeds = new Float32Array(lattice.count);
@@ -69,7 +71,7 @@ function Field({
       uAmbient: { value: 1 },
       uMorph: { value: 0 },
       uScroll: { value: 0 },
-      uSize: { value: 26 },
+      uSize: { value: 20 },
       uDpr: { value: 1 },
       uRadius: { value: 2.4 },
       uRotation: { value: 0 },
@@ -170,10 +172,17 @@ function Field({
     u.uDpr.value = Math.min(state.gl.getPixelRatio(), 2);
 
     // --- STATE 1: slow rotation on Y ----------------------------------
+    // Oscillates rather than spinning through a full revolution. The lattice
+    // is a flat plane, so a continuous Y spin turned it edge-on twice per
+    // revolution and the whole hero collapsed to a thin vertical band for
+    // several seconds at a time. Peak angular velocity is still 0.05 rad/s
+    // (0.42 x 0.12), so the motion reads identically — it just never passes
+    // through the angle where the plane disappears.
+    //
     // Applied in the shader, not on the object, so the cursor response below
     // can be computed in world space and stay exact at every angle.
-    rotation.current += dt * 0.05;
-    u.uRotation.value = rotation.current;
+    rotation.current += dt;
+    u.uRotation.value = Math.sin(rotation.current * 0.12) * 0.42;
 
     // --- STATE 2: pointer as depth sensor -----------------------------
     const idle = now - pointer.current.lastMove > IDLE_MS;
@@ -208,8 +217,8 @@ function Field({
     // a phone and sparse on a large display.
     if (material.current) {
       material.current.uniforms.uSize.value = Math.max(
-        16,
-        Math.min(34, size.height * 0.03),
+        12,
+        Math.min(24, size.height * 0.023),
       );
     }
   }, [size.height]);
@@ -244,7 +253,10 @@ export default function JaaliField({
 }) {
   return (
     <Canvas
-      dpr={[1, 2]}
+      // 1.5 rather than 2: at DPR 2 the hero canvas was rendering 3.3
+      // megapixels on a laptop and over 6 on a large display, every frame,
+      // for a field of 1px points where the extra resolution is invisible.
+      dpr={[1, 1.5]}
       camera={{ position: [0, 0, 11], fov: 42 }}
       gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
       style={{ pointerEvents: "none" }}

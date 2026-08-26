@@ -33,24 +33,25 @@ export function useTheme() {
   }, []);
 
   /**
-   * Expands a circular wipe from the triggering element via the View
-   * Transitions API. Falls back to an instant swap where unsupported, and
-   * always swaps instantly under reduced motion.
+   * Sweeps a circle of the incoming background colour out from the toggle,
+   * swaps the theme underneath once it covers the viewport, then drops the
+   * overlay.
+   *
+   * This deliberately does NOT use the View Transitions API. That snapshots
+   * the whole viewport twice to animate what is only ever a colour change,
+   * and this page has a multi-megapixel WebGL canvas in it — on a large
+   * display that is a great deal of GPU memory moved for one toggle. One
+   * composited div does the same job for almost nothing.
+   *
+   * Swaps instantly under reduced motion, and if anything throws the theme
+   * still applies — the animation is never allowed to be load-bearing.
    */
   const toggle = useCallback(
     (origin?: { x: number; y: number }) => {
       const next: Theme = readTheme() === "dark" ? "light" : "dark";
 
-      const reduced = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-
-      type DocWithVT = Document & {
-        startViewTransition?: (cb: () => void) => { ready: Promise<void> };
-      };
-      const doc = document as DocWithVT;
-
-      if (reduced || typeof doc.startViewTransition !== "function") {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduced || typeof document.body.animate !== "function") {
         apply(next);
         return;
       }
@@ -62,27 +63,43 @@ export function useTheme() {
         Math.max(y, window.innerHeight - y),
       );
 
-      const transition = doc.startViewTransition(() => apply(next));
+      // The incoming ground colour, read from the stylesheet rather than
+      // hard-coded, so the wipe can never drift from the palette.
+      const probe = document.createElement("div");
+      probe.setAttribute("data-theme", next);
+      probe.style.cssText = "position:fixed;visibility:hidden";
+      document.body.appendChild(probe);
+      const incoming =
+        getComputedStyle(probe).getPropertyValue("--ground").trim() || "#070a0f";
+      probe.remove();
 
-      transition.ready
-        .then(() => {
-          document.documentElement.animate(
-            {
-              clipPath: [
-                `circle(0px at ${x}px ${y}px)`,
-                `circle(${radius}px at ${x}px ${y}px)`,
-              ],
-            },
-            {
-              duration: 620,
-              easing: "cubic-bezier(0.16, 1, 0.3, 1)",
-              pseudoElement: "::view-transition-new(root)",
-            },
-          );
-        })
-        .catch(() => {
-          /* transition aborted — the theme has already been applied */
-        });
+      const overlay = document.createElement("div");
+      overlay.className = "theme-wipe";
+      overlay.style.background = incoming;
+      overlay.style.clipPath = `circle(0px at ${x}px ${y}px)`;
+      document.body.appendChild(overlay);
+
+      const animation = overlay.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${radius}px at ${x}px ${y}px)`,
+          ],
+        },
+        { duration: 420, easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "forwards" },
+      );
+
+      const finish = () => {
+        apply(next);
+        overlay.remove();
+      };
+      animation.addEventListener("finish", finish, { once: true });
+      animation.addEventListener("cancel", finish, { once: true });
+      // Belt and braces: if the animation never fires (a backgrounded tab
+      // throttles rAF), the theme must still change.
+      window.setTimeout(() => {
+        if (overlay.isConnected) finish();
+      }, 900);
     },
     [apply],
   );

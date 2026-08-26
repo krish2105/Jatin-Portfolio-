@@ -19,6 +19,7 @@ export function Hero() {
       aria-labelledby="hero-name"
       className="relative isolate flex min-h-dvh flex-col justify-center overflow-hidden pb-20 pt-24 md:pb-24 md:pt-28"
     >
+      <div aria-hidden className="atmo atmo-hero" />
       <HeroLattice className="pointer-events-none absolute left-1/2 top-1/2 -z-10 aspect-square w-[min(165vw,1150px)] -translate-x-1/2 -translate-y-1/2 opacity-80 md:w-[min(105vw,1250px)] md:-translate-x-[34%] md:-translate-y-[52%]" />
 
       <div className="mx-auto w-full max-w-[1440px] px-gutter">
@@ -94,7 +95,7 @@ export function Hero() {
               aria-hidden
               className="absolute -bottom-3 -right-3 hidden h-full w-full border border-accent/25 md:block"
             />
-            <div className="relative w-fit border border-edge bg-surface p-2.5">
+            <div className="panel relative w-fit p-2.5">
               <Image
                 src="/portrait.webp"
                 alt={siteMeta.portraitAlt}

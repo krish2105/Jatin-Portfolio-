@@ -188,7 +188,7 @@ export function CommandPalette() {
         aria-label="Command palette"
         tabIndex={-1}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-xl overflow-hidden border border-edge bg-surface outline-none"
+        className="panel w-full max-w-xl overflow-hidden outline-none"
       >
         <div className="flex items-center gap-3 border-b border-edge px-4">
           <Search aria-hidden size={16} strokeWidth={1.7} className="text-muted" />

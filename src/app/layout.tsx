@@ -140,7 +140,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: viewModeScript }}
         />
       </head>
-      <body>
+      <body className="grain">
         <ThemeGuard />
         <Preloader />
         <Cursor />

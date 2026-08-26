@@ -41,6 +41,18 @@
   --lattice-field: 0.32;
   --lattice-node: 0.4;
 
+  /* Elevation in dark mode comes from surface lightness, not shadow — a
+     shadow on near-black is invisible. Each step up is a slightly lighter,
+     blue-tinted grey, which the eye reads as closer. */
+  --raised: #151d28;
+  /* A 1px inner top highlight is what makes a dark card look lit rather than
+     cut out of the page. */
+  --edge-light: rgba(255, 255, 255, 0.055);
+  --glow-a: rgba(45, 212, 191, 0.16);
+  --glow-b: rgba(45, 212, 191, 0.07);
+  --wash: rgba(255, 255, 255, 0.022);
+  --grain-opacity: 0.032;
+
   --scrim: 0 0% 2%;
   --shadow-key: 0 0 0;
   --shadow-strength: 0.55;
@@ -67,6 +79,15 @@
   --lattice-field: 0.5;
   --lattice-node: 0.55;
 
+  /* Light mode gets elevation the conventional way — a real shadow — so the
+     ladder inverts: raised surfaces stay white and lift off a tinted ground. */
+  --raised: #ffffff;
+  --edge-light: rgba(7, 10, 15, 0.045);
+  --glow-a: rgba(13, 148, 136, 0.09);
+  --glow-b: rgba(13, 148, 136, 0.035);
+  --wash: rgba(7, 10, 15, 0.014);
+  --grain-opacity: 0.018;
+
   --scrim: 210 20% 12%;
   --shadow-key: 12 20 32;
   --shadow-strength: 0.1;
@@ -88,6 +109,7 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
+  --color-raised: var(--raised);
   --color-accent-solid: var(--accent-solid);
   --color-accent-on: var(--accent-on);
   --color-signature: var(--signature);
@@ -228,6 +250,24 @@
   mask-image: none;
 }
 
+/* A lit card: raised surface, hairline, and a 1px inner highlight along the
+   top edge. The highlight is what separates "expensive dark UI" from "black
+   rectangle" — it implies a light source the flat version has no answer for. */
+@utility panel {
+  background-color: var(--raised);
+  border: 1px solid var(--edge);
+  box-shadow:
+    inset 0 1px 0 var(--edge-light),
+    0 1px 2px rgba(0, 0, 0, 0.18),
+    0 12px 32px -20px rgba(0, 0, 0, 0.55);
+}
+
+/* A very soft directional wash across large surfaces, so a big panel is not
+   one dead flat value from corner to corner. */
+@utility washed {
+  background-image: linear-gradient(160deg, var(--wash), transparent 62%);
+}
+
 /* Edge-faded marquee/track mask */
 @utility mask-edges {
   -webkit-mask-image: linear-gradient(
@@ -244,6 +284,75 @@
     #000 94%,
     transparent
   );
+}
+
+/* --------------------------------------------------------------------------
+   Atmosphere. Large, very soft accent glows sit behind content to give the
+   page depth without ever competing with copy — every one of these is below
+   the text in the stacking order and none exceeds 0.16 alpha.
+   -------------------------------------------------------------------------- */
+
+.atmo {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  filter: blur(90px);
+  z-index: -1;
+}
+
+.atmo-hero {
+  width: min(80vw, 900px);
+  aspect-ratio: 1;
+  top: -18%;
+  right: -14%;
+  background: radial-gradient(circle, var(--glow-a), transparent 68%);
+}
+
+.atmo-section {
+  width: min(62vw, 640px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle, var(--glow-b), transparent 70%);
+}
+
+/* Film grain. Dark gradients band badly on 8-bit panels; a little noise
+   breaks the banding up and reads as texture rather than compression. */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* --------------------------------------------------------------------------
+   Theme wipe.
+
+   This replaced the View Transitions API, which snapshots the entire viewport
+   twice — including a multi-megapixel WebGL canvas — to animate what is only
+   ever a background colour change. On a large display that is a lot of GPU
+   memory moved for one toggle. A single clip-path circle costs one composited
+   layer and looks near-identical.
+   -------------------------------------------------------------------------- */
+
+.theme-wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  pointer-events: none;
+  will-change: clip-path;
+}
+
+.theme-wipe::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* A thin accent rim on the leading edge, so the sweep reads as deliberate
+     rather than as the page briefly blanking. */
+  box-shadow: inset 0 0 0 1px var(--accent);
+  opacity: 0.5;
+  border-radius: inherit;
 }
 
 /* --------------------------------------------------------------------------
@@ -345,32 +454,6 @@
 }
 
 /* --------------------------------------------------------------------------
-   Theme transition — circular wipe from the toggle (View Transitions API)
-   -------------------------------------------------------------------------- */
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-
-::view-transition-old(root) {
-  z-index: 1;
-}
-
-::view-transition-new(root) {
-  z-index: 2;
-}
-
-html[data-vt-reverse="true"]::view-transition-old(root) {
-  z-index: 2;
-}
-
-html[data-vt-reverse="true"]::view-transition-new(root) {
-  z-index: 1;
-}
-
-/* --------------------------------------------------------------------------
    Reduced motion — the single most important accessibility rule here.
    Kills the preloader, marquee, parallax and every transition.
    -------------------------------------------------------------------------- */
@@ -383,11 +466,5 @@ html[data-vt-reverse="true"]::view-transition-new(root) {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
   }
 }

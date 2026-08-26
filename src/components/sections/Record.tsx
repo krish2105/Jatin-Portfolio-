@@ -14,13 +14,14 @@ const SPAN: Record<RecordTile["size"], string> = {
 export function Record() {
   return (
     <Section id="record" number="07" label="Record">
+      <div aria-hidden className="atmo atmo-section right-[-14%] top-0" />
       <RevealGroup as="ul" stagger={0.06} className="mt-12 grid auto-rows-[minmax(140px,auto)] grid-cols-1 gap-px overflow-hidden border border-edge bg-edge sm:grid-cols-4 md:mt-16">
         {recordTiles.map((tile) => (
           <RevealItem
             as="li"
             key={tile.id}
             className={cn(
-              "flex flex-col justify-between gap-6 bg-surface p-6 md:p-7",
+              "flex flex-col justify-between gap-6 bg-raised p-6 md:p-7",
               SPAN[tile.size],
             )}
           >

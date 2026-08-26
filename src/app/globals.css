@@ -1,26 +1,260 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ==========================================================================
+   VISION MESH — design tokens
+   --------------------------------------------------------------------------
+   Every colour on this site derives from the seven tokens below. Dark is the
+   default and was designed first; light is a separate design, not an inversion.
+
+   One derived token exists: `accent-ink`. In light mode the raw accent
+   (#0D9488) measures 3.54:1 against `ground` — enough for large text and UI
+   chrome, short of the 4.5:1 body-text floor. `accent-ink` is the darkened
+   variant used wherever accent carries running text (inline links). In dark
+   mode accent already measures 10.6:1, so the two tokens are identical there.
+
+   `signature` (brass) appears in exactly ONE place on the site: the
+   illuminated edges of the hero lattice, and its SVG fallback. Its scarcity is
+   the point. If it shows up anywhere else, the design is broken.
+   ========================================================================== */
+
+:root,
+:root[data-theme="dark"] {
+  --ground: #070a0f;
+  --surface: #0e141c;
+  --edge: #1b2530;
+  --text: #e6edf3;
+  --muted: #7d8b9a;
+  --accent: #2dd4bf;
+  --accent-ink: #2dd4bf; /* 10.64:1 on ground */
+  --signature: #c9a227;
+
+  --scrim: 0 0% 2%;
+  --shadow-key: 0 0 0;
+  --shadow-strength: 0.55;
+  color-scheme: dark;
 }
+
+:root[data-theme="light"] {
+  --ground: #f6f8fa;
+  --surface: #ffffff;
+  --edge: #e1e7ed;
+  --text: #070a0f;
+  --muted: #5a6875;
+  --accent: #0d9488;
+  --accent-ink: #0a6e66; /* 5.74:1 on ground — accent itself is 3.54:1 */
+  --signature: #8c6d12;
+
+  --scrim: 210 20% 12%;
+  --shadow-key: 12 20 32;
+  --shadow-strength: 0.1;
+  color-scheme: light;
+}
+
+/* Theme-scoped variants — `theme-dark:` / `theme-light:` in markup.
+   Most of the site needs neither, because every colour is already a token
+   that swaps itself. These exist for the few places where an element must
+   differ structurally between themes, not just chromatically. */
+@custom-variant theme-dark (&:where(:root[data-theme="dark"], :root[data-theme="dark"] *));
+@custom-variant theme-light (&:where(:root[data-theme="light"], :root[data-theme="light"] *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-edge: var(--edge);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-signature: var(--signature);
+
+  --font-display: var(--font-bricolage), "Geist Sans", system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+
+  /* Fluid type scale — clamp() throughout, no breakpoint jumps */
+  --text-2xs: clamp(0.66rem, 0.64rem + 0.1vw, 0.72rem);
+  --text-xs: clamp(0.75rem, 0.73rem + 0.12vw, 0.82rem);
+  --text-sm: clamp(0.86rem, 0.83rem + 0.16vw, 0.94rem);
+  --text-base: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+  --text-lg: clamp(1.13rem, 1.06rem + 0.32vw, 1.31rem);
+  --text-xl: clamp(1.32rem, 1.2rem + 0.55vw, 1.66rem);
+  --text-2xl: clamp(1.6rem, 1.38rem + 1vw, 2.2rem);
+  --text-3xl: clamp(2rem, 1.6rem + 1.8vw, 3.05rem);
+  --text-4xl: clamp(2.5rem, 1.8rem + 3.2vw, 4.2rem);
+  --text-display: clamp(3rem, 11vw, 9rem);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --spacing-gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --spacing-section: clamp(5rem, 11vw, 10rem);
+
+  --radius-tile: 2px;
+  --radius-card: 4px;
+  --radius-pill: 999px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+@layer base {
+  * {
+    border-color: var(--edge);
+    min-width: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--ground);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+    /* Theme swap is instant except through the View Transition wipe */
+    transition: background-color 0s;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Anything that is data reads in mono — ledger dates, metrics, CGPA,
+     section numbers. Typographic discipline borrowed from ERP interfaces. */
+  .u-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--accent) 26%, transparent);
+    color: var(--text);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  /* Never remove the ring — only ever re-place it */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* --------------------------------------------------------------------------
+   Utilities
+   -------------------------------------------------------------------------- */
+
+@utility hairline-t {
+  border-top: 1px solid var(--edge);
+}
+
+@utility hairline-b {
+  border-bottom: 1px solid var(--edge);
+}
+
+@utility gutter {
+  padding-inline: var(--spacing-gutter);
+}
+
+/* Edge-faded marquee/track mask */
+@utility mask-edges {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+}
+
+/* --------------------------------------------------------------------------
+   Theme transition — circular wipe from the toggle (View Transitions API)
+   -------------------------------------------------------------------------- */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+html[data-vt-reverse="true"]::view-transition-old(root) {
+  z-index: 2;
+}
+
+html[data-vt-reverse="true"]::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — the single most important accessibility rule here.
+   Kills the preloader, marquee, parallax and every transition.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }

@@ -13,7 +13,7 @@ const SPAN: Record<RecordTile["size"], string> = {
 
 export function Record() {
   return (
-    <Section id="record" number="06" label="Record">
+    <Section id="record" number="07" label="Record">
       <RevealGroup as="ul" stagger={0.06} className="mt-12 grid auto-rows-[minmax(140px,auto)] grid-cols-1 gap-px overflow-hidden border border-edge bg-edge sm:grid-cols-4 md:mt-16">
         {recordTiles.map((tile) => (
           <RevealItem

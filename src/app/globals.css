@@ -223,6 +223,11 @@
   padding-inline: var(--spacing-gutter);
 }
 
+@utility mask-none {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
 /* Edge-faded marquee/track mask */
 @utility mask-edges {
   -webkit-mask-image: linear-gradient(
@@ -239,6 +244,54 @@
     #000 94%,
     transparent
   );
+}
+
+/* --------------------------------------------------------------------------
+   Hero entrance.
+
+   Deliberately CSS, not JS. The first version animated from opacity 0 with
+   Motion, which meant the name, the copy and both CTAs were invisible until
+   a script finished running — so a stalled, throttled or failed animation
+   left the hero as bare lattice with no content in it at all.
+
+   `animation-fill-mode: backwards` inverts that risk: the element's real
+   state is visible, and the keyframe only borrows it backwards through the
+   delay. No animation, no problem — the content is simply there. The global
+   reduced-motion guard collapses the duration to nothing, which lands in the
+   same place.
+   -------------------------------------------------------------------------- */
+
+.hero-rise {
+  animation: hero-rise 0.75s var(--ease-out-expo) backwards;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+}
+
+.hero-mask {
+  display: block;
+  animation: hero-mask 0.95s var(--ease-out-expo) backwards;
+}
+
+@keyframes hero-mask {
+  from {
+    transform: translate3d(0, 108%, 0);
+  }
+}
+
+.hero-rule {
+  transform-origin: left;
+  animation: hero-rule 0.9s var(--ease-out-expo) backwards;
+}
+
+@keyframes hero-rule {
+  from {
+    transform: scaleX(0);
+  }
 }
 
 /* --------------------------------------------------------------------------

@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { JaaliGlyph } from "./JaaliGlyph";
 import { MobileMenu } from "./MobileMenu";
 import { ThemeToggle } from "./ThemeToggle";
+import { ViewModeToggle } from "./ViewModeToggle";
 
 const SECTION_IDS = navItems.map((item) => item.href.slice(1));
 
@@ -64,6 +65,7 @@ export function Nav() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-2">
+            <ViewModeToggle className="hidden xl:inline-flex" />
             <ThemeToggle />
             <button
               type="button"

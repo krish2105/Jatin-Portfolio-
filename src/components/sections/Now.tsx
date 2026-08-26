@@ -7,7 +7,7 @@ const languages = skillGroups.find((group) => group.id === "languages")!;
 
 export function Now() {
   return (
-    <Section id="now" number="07" label="Now">
+    <Section id="now" number="08" label="Now">
       <div className="mt-12 grid gap-12 md:mt-16 lg:grid-cols-12 lg:gap-16">
         <Reveal className="lg:col-span-7">
           <p className="max-w-[54ch] text-xl leading-relaxed text-text md:text-2xl md:leading-relaxed">

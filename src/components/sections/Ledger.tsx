@@ -9,7 +9,7 @@ import { Reveal } from "@/components/ui/Reveal";
  */
 export function Ledger() {
   return (
-    <Section id="ledger" number="04" label="Ledger">
+    <Section id="ledger" number="05" label="Ledger">
       <div className="mt-12 md:mt-16">
         <div className="u-mono hidden grid-cols-12 gap-6 border-b border-edge pb-3 text-2xs uppercase tracking-[0.24em] text-muted lg:grid">
           <span className="col-span-8">Engagement</span>

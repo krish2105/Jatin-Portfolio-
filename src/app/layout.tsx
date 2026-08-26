@@ -4,10 +4,12 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 
 import { noFlashScript } from "@/lib/theme";
+import { viewModeScript } from "@/lib/viewMode";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Preloader } from "@/components/ui/Preloader";
 import { Cursor } from "@/components/ui/Cursor";
 import { ThemeGuard } from "@/components/ui/ThemeGuard";
+import { CommandPalette } from "@/components/ui/CommandPalette";
 import { profile, siteMeta } from "@/data/portfolio";
 import "./globals.css";
 
@@ -132,11 +134,17 @@ export default function RootLayout({
           // Sets data-theme before first paint. Must stay blocking and inline.
           dangerouslySetInnerHTML={{ __html: noFlashScript }}
         />
+        <script
+          // Reading mode, also before first paint — it changes layout, so
+          // resolving it after hydration would visibly reflow the page.
+          dangerouslySetInnerHTML={{ __html: viewModeScript }}
+        />
       </head>
       <body>
         <ThemeGuard />
         <Preloader />
         <Cursor />
+        <CommandPalette />
         <SmoothScroll>{children}</SmoothScroll>
         <script
           type="application/ld+json"

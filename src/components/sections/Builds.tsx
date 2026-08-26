@@ -7,6 +7,7 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { builds } from "@/data/portfolio";
 import type { BuildProject } from "@/types/portfolio";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useViewMode } from "@/hooks/useViewMode";
 import { CaseStudyModal } from "@/components/ui/CaseStudyModal";
 import { TiltCard } from "@/components/ui/TiltCard";
 
@@ -72,7 +73,7 @@ export function Builds() {
                 id="builds-heading"
                 className="u-mono flex items-center gap-3 text-2xs"
               >
-                <span className="text-accent-ink">05</span>
+                <span className="text-accent-ink">06</span>
                 <span aria-hidden className="h-px w-8 bg-edge" />
                 <span className="uppercase tracking-[0.3em] text-muted">
                   Builds
@@ -120,6 +121,13 @@ function BuildCard({
   project: BuildProject;
   onOpen: () => void;
 }) {
+  const { mode } = useViewMode();
+  /* Recruiters want to know what came of it; engineers want to know how it
+     was done. Both lines exist on the card either way — only the one that
+     leads changes. */
+  const lead = mode === "recruiter" ? project.result : project.approach;
+  const leadLabel = mode === "recruiter" ? "Result" : "Approach";
+
   return (
     <article className="group flex h-full flex-col border border-edge bg-surface p-6 transition-colors hover:border-accent/50 md:p-7">
       <p className="u-mono flex items-center gap-3 text-2xs uppercase tracking-[0.24em] text-muted">
@@ -136,9 +144,10 @@ function BuildCard({
         {project.tag}
       </p>
 
-      <p className="mt-5 flex-1 text-sm leading-relaxed text-muted">
-        {project.problem}
+      <p className="u-mono mt-6 text-2xs uppercase tracking-[0.24em] text-muted">
+        {leadLabel}
       </p>
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{lead}</p>
 
       <ul className="mt-6 flex flex-wrap gap-2">
         {project.stack.map((tech) => (

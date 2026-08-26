@@ -109,6 +109,30 @@ export interface ContactContent {
   resume: string;
 }
 
+/** One stage of a NetSuite implementation, and what Jatin owns in it. */
+export interface DeliveryStage {
+  id: string;
+  /** Two-digit index, shown in mono */
+  index: string;
+  name: string;
+  /** What the stage is, in ERP terms */
+  summary: string;
+  /** What he personally does at this stage — drawn from his stated work only */
+  owns: readonly string[];
+}
+
+/** A NetSuite functional area he has configured. */
+export interface NetSuiteModule {
+  id: string;
+  name: string;
+  /** The business process the module carries */
+  scope: string;
+  /** Representative records/objects inside it */
+  records: readonly string[];
+}
+
+export type ViewMode = "recruiter" | "technical";
+
 export interface NavItem {
   /** Section number shown as a mono eyebrow, e.g. "03" */
   number: string;

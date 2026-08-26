@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { navItems, profile } from "@/data/portfolio";
 import { JaaliGlyph } from "./JaaliGlyph";
+import { ViewModeToggle } from "./ViewModeToggle";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /**
@@ -75,6 +76,10 @@ export function MobileMenu({
       </nav>
 
       <div className="shrink-0 border-t border-edge px-gutter py-6">
+        <p className="u-mono mb-3 text-2xs uppercase tracking-[0.24em] text-muted">
+          Reading mode
+        </p>
+        <ViewModeToggle className="mb-6" />
         <a
           href={`mailto:${profile.email}`}
           className="u-mono block text-sm text-accent-ink"

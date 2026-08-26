@@ -1,5 +1,7 @@
 import type {
   BuildProject,
+  DeliveryStage,
+  NetSuiteModule,
   ContactContent,
   EducationEntry,
   ExperienceEntry,
@@ -32,26 +34,28 @@ export const hero: HeroContent = {
   eyebrow: "ORACLE NETSUITE FUNCTIONAL CONSULTANT · PUNE",
   display: "JATIN ACHARYA",
   rotating: ["ERP implementations", "computer vision", "client delivery"],
-  sub: "I implement the systems companies run on, and build the models that make them smarter. B.Tech (Hons.) CSE — AI & ML, 9.37 CGPA.",
+  sub: "I implement the Oracle NetSuite systems companies run on — end to end, from requirements through go-live — and build the machine-learning models that make them smarter.",
   ctaPrimary: "See the work",
   ctaSecondary: "Download resume",
 };
 
 export const ticker: readonly string[] = [
   "Oracle NetSuite",
-  "Python",
-  "OpenCV",
-  "SuiteScript",
-  "scikit-learn",
-  "SQL",
   "ERP Implementation",
-  "Computer Vision",
+  "Order to Cash",
+  "Procure to Pay",
+  "Financials · GL / AR / AP",
+  "Inventory & Warehouse",
   "Functional Testing",
-  "TensorFlow",
-  "Business Process Analysis",
-  "MediaPipe",
   "Requirement Gathering",
+  "User Training",
+  "Go-Live Support",
+  "Business Process Analysis",
+  "Python",
+  "Computer Vision",
+  "OpenCV",
   "Machine Learning",
+  "SQL",
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -126,23 +130,6 @@ export const experience: readonly ExperienceEntry[] = [
     ],
   },
   {
-    id: "ibm",
-    company: "IBM",
-    location: "Remote",
-    roles: [
-      {
-        title: "Project Trainee",
-        employment: "Apprenticeship",
-        period: "Jun 2024 – Jul 2024",
-        sortKey: "2024-06",
-        bullets: [
-          "Built and deployed machine learning models for predictive analytics problems over a six-week structured programme.",
-          'Capstone: "Weight Loss Prediction using Linear Regression" — a regression model estimating outcomes from multi-feature health inputs. Certificate issued.',
-        ],
-      },
-    ],
-  },
-  {
     id: "vvdn",
     company: "VVDN Technologies",
     location: "Gurugram",
@@ -166,7 +153,7 @@ export const education: EducationEntry = {
   qualification: "B.Tech (Hons.) Computer Science & Engineering",
   specialisation: "Artificial Intelligence & Machine Learning",
   period: "Jan 2021 – Dec 2025",
-  result: "CGPA 9.37 / 10",
+  result: "Dean's List of Excellence ×5",
 };
 
 /* --------------------------------------------------------------------------
@@ -229,13 +216,125 @@ export const builds: readonly BuildProject[] = [
   },
 ];
 
+/* --------------------------------------------------------------------------
+   NetSuite delivery. The stages below describe a standard ERP implementation
+   lifecycle; the `owns` lines under each are drawn strictly from what Jatin
+   has actually done, as stated in his experience. Nothing here claims scope
+   he has not worked in.
+   -------------------------------------------------------------------------- */
+
+export const deliveryStages: readonly DeliveryStage[] = [
+  {
+    id: "discovery",
+    index: "01",
+    name: "Discovery",
+    summary:
+      "Sit with the people who run the process today and write down how it actually works, not how the org chart says it works.",
+    owns: [
+      "Runs requirement-gathering sessions with client stakeholders",
+      "Documents current-state processes across finance and operations",
+    ],
+  },
+  {
+    id: "fit-gap",
+    index: "02",
+    name: "Fit / gap",
+    summary:
+      "Map each documented process onto standard NetSuite capability. Where it fits, configure. Where it doesn't, decide whether the process or the system should move.",
+    owns: [
+      "Maps business processes to NetSuite functionality",
+      "Analyses where standard behaviour fits and where it does not",
+    ],
+  },
+  {
+    id: "configuration",
+    index: "03",
+    name: "Configuration",
+    summary:
+      "Build the system: records, forms, roles, permissions, approval routing and the transaction flows the business will live in.",
+    owns: [
+      "Configures modules across Financials, Order to Cash, Procure to Pay and Inventory",
+      "Sets up records, forms, roles and approval routing",
+    ],
+  },
+  {
+    id: "testing",
+    index: "04",
+    name: "Functional testing",
+    summary:
+      "Walk every transaction path end to end before a user ever sees it. Find the breaks while they are still cheap.",
+    owns: [
+      "Runs functional testing across configured modules",
+      "Triages defects ahead of user acceptance testing",
+    ],
+  },
+  {
+    id: "training",
+    index: "05",
+    name: "Training",
+    summary:
+      "An ERP nobody can operate is a very expensive database. Adoption is the deliverable, not the configuration.",
+    owns: [
+      "Runs user training sessions for the teams who use the system daily",
+      "Owns adoption from kickoff through handover",
+    ],
+  },
+  {
+    id: "go-live",
+    index: "06",
+    name: "Go-live",
+    summary:
+      "Cutover. The week where the old system stops being the source of truth and the new one starts.",
+    owns: ["Provides go-live support across client engagements"],
+  },
+  {
+    id: "hypercare",
+    index: "07",
+    name: "Hypercare & support",
+    summary:
+      "The phase most implementations underestimate. Real usage surfaces the process gaps that testing never will.",
+    owns: [
+      "Provides ongoing functional support to live clients",
+      "Resolves process and configuration issues as they surface",
+    ],
+  },
+];
+
+export const netsuiteModules: readonly NetSuiteModule[] = [
+  {
+    id: "financials",
+    name: "Financials",
+    scope: "General ledger, receivables and payables — the books the whole system reconciles to.",
+    records: ["Chart of accounts", "Journal entries", "Invoices", "Vendor bills"],
+  },
+  {
+    id: "o2c",
+    name: "Order to Cash",
+    scope: "From a customer order through fulfilment to cash collected. The revenue path.",
+    records: ["Sales orders", "Item fulfilments", "Invoices", "Customer payments"],
+  },
+  {
+    id: "p2p",
+    name: "Procure to Pay",
+    scope: "From a request to buy through receipt to the vendor being paid. The spend path.",
+    records: ["Purchase requisitions", "Purchase orders", "Item receipts", "Vendor payments"],
+  },
+  {
+    id: "inventory",
+    name: "Inventory & Warehouse",
+    scope: "What stock exists, where it sits, and how it moves between locations.",
+    records: ["Item records", "Locations", "Inventory adjustments", "Transfer orders"],
+  },
+];
+
 /* -------------------------------------------------------------------------- */
 
 export const recordTiles: readonly RecordTile[] = [
   {
-    id: "cgpa",
-    value: "9.37",
-    label: "CGPA · B.Tech (Hons.) CSE — AI & ML, Manipal University Jaipur",
+    id: "netsuite",
+    value: "End to end",
+    label:
+      "Oracle NetSuite implementations owned from requirement gathering through go-live and hypercare",
     size: "large",
   },
   {
@@ -335,11 +434,12 @@ export const contact: ContactContent = {
 
 export const navItems: readonly NavItem[] = [
   { number: "03", label: "Stacks", href: "#stacks" },
-  { number: "04", label: "Ledger", href: "#ledger" },
-  { number: "05", label: "Builds", href: "#builds" },
-  { number: "06", label: "Record", href: "#record" },
-  { number: "07", label: "Now", href: "#now" },
-  { number: "08", label: "Contact", href: "#contact" },
+  { number: "04", label: "NetSuite", href: "#delivery" },
+  { number: "05", label: "Ledger", href: "#ledger" },
+  { number: "06", label: "Builds", href: "#builds" },
+  { number: "07", label: "Record", href: "#record" },
+  { number: "08", label: "Now", href: "#now" },
+  { number: "09", label: "Contact", href: "#contact" },
 ];
 
 export const siteMeta = {
@@ -348,7 +448,7 @@ export const siteMeta = {
   url: "https://jatin-portfolio-krishnamathur008-1499s-projects.vercel.app",
   title: `${profile.name} — ${profile.role}`,
   description:
-    "Oracle NetSuite Functional Consultant and AI/ML engineer. I implement the enterprise systems companies run on, and build the computer-vision models that make them smarter.",
+    "Oracle NetSuite Functional Consultant in Pune. End-to-end ERP implementations across Financials, Order to Cash, Procure to Pay and Inventory — plus applied machine learning and computer vision.",
   portraitAlt:
     "Jatin Acharya in a checked blazer, standing in front of a large painted peacock mural",
 } as const;

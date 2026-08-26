@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { Ticker } from "@/components/sections/Ticker";
 import { TwoStacks } from "@/components/sections/TwoStacks";
+import { NetSuiteDelivery } from "@/components/sections/NetSuiteDelivery";
 import { Ledger } from "@/components/sections/Ledger";
 import { Builds } from "@/components/sections/Builds";
 import { Record } from "@/components/sections/Record";
@@ -22,6 +23,7 @@ export default function Page() {
         <Hero />
         <Ticker />
         <TwoStacks />
+        <NetSuiteDelivery />
         <Ledger />
         <Builds />
         <Record />

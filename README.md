@@ -63,6 +63,8 @@ tell you if something is missing.
 | `experience` | The Ledger. Reverse chronological; each entry may hold several roles |
 | `education` | Degree, specialisation, CGPA |
 | `builds` | The three project case studies |
+| `deliveryStages` | The seven NetSuite implementation stages and what Jatin owns in each |
+| `netsuiteModules` | The functional areas he has configured |
 | `recordTiles` | The bento grid of achievements |
 | `skillGroups` | Systems / Models / Languages / Learning |
 | `now`, `contact` | The Now and Contact sections |
@@ -176,6 +178,46 @@ After the first production deploy, set the real domain in `siteMeta.url`
 
 ---
 
+## For hiring teams
+
+Three features exist specifically for the people doing the hiring. All three
+are **deterministic** — plain string matching over `portfolio.ts`, no language
+model anywhere. They can under-report, but they cannot fabricate.
+
+| Feature | What it does |
+|---|---|
+| Copy hiring summary | Puts an ATS-ready plain-text summary on the clipboard, assembled from the same data the page renders |
+| JD matcher | Paste a job description; it reports which capabilities are covered, in the browser, with nothing uploaded |
+| Recruiter / Technical view | Reorders project cards and case studies to lead with outcome or with approach. Nothing is ever hidden from either reader |
+| ⌘K palette | Jump to any section, copy the email or summary, download the resume, switch theme or view |
+
+The JD matcher reports a **count of matched capabilities**, not a fit
+percentage. An earlier version led with a percentage and a NetSuite-only role
+scored 28% while matching every requirement in the posting — the number read
+as a rejection when it was actually describing how much of a two-sided
+(ERP + ML) capability surface a single-sided role happens to touch. The
+percentage is still shown, clearly labelled as overlap rather than fit.
+
+## The NetSuite delivery section
+
+The spine of the ERP half of the site. Seven stages — Discovery, Fit/gap,
+Configuration, Functional testing, Training, Go-live, Hypercare — each with
+what Jatin personally owns at that point.
+
+The stage descriptions are standard ERP practice. Every line under
+"What Jatin owns here" is drawn strictly from his stated experience. **If you
+edit `deliveryStages`, keep that separation** — the section is credible
+precisely because it never claims scope he has not worked in.
+
+## The contact form
+
+Composes the message into the sender's own mail client rather than posting to
+a server. That is deliberate: a hosted form needs an API key in the
+deployment, a spam story, and a place for messages to be silently lost when
+the key rotates. This way the message lands in the sender's Sent folder, Jatin
+replies from his real inbox, and there is no credential to leak. The UI says
+exactly what will happen before it happens.
+
 ## The hero scene
 
 One React Three Fiber particle system, ~9,500 points (~2,800 on low-power
@@ -267,3 +309,16 @@ equal and the travel distance came out as zero.
 **`overflow-x: clip` has to sit on `<html>`**, not only `<body>`. The Builds
 swipe gallery is a nested horizontal scroller whose content still reached the
 viewport scroll box, and the page scrolled sideways at 360px.
+
+**The hero entrance is CSS, not Motion, and must stay that way.** The first
+version animated from `opacity: 0` with Motion, which meant the name, the copy
+and both CTAs were invisible until a script finished — a stalled, throttled or
+failed animation left the hero as bare lattice with no content in it. The
+keyframes now use `animation-fill-mode: backwards`, so the element's real
+state is visible and the animation only borrows it backwards through the
+delay. No JS, no problem: the content is simply there.
+
+**The rotating line is sized by a hidden copy of the longest string**, not by
+`ch` units. `ch` is the advance of "0", which is not the advance of a letter
+even in a monospaced face — the box came out exactly as wide as the text and
+"ERP implementations" clipped.

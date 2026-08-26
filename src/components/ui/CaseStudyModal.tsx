@@ -6,10 +6,20 @@ import { X } from "lucide-react";
 
 import type { BuildProject } from "@/types/portfolio";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useViewMode } from "@/hooks/useViewMode";
 import { GitHubMark } from "./BrandIcons";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-const BLOCKS = [
+/* Same four blocks for both readers — nothing is ever hidden. Recruiters get
+   problem and outcome first; engineers get the approach and the build first. */
+const RECRUITER_BLOCKS = [
+  { key: "problem", label: "The problem" },
+  { key: "result", label: "Result" },
+  { key: "approach", label: "Approach" },
+  { key: "built", label: "What I built" },
+] as const;
+
+const TECHNICAL_BLOCKS = [
   { key: "problem", label: "The problem" },
   { key: "approach", label: "Approach" },
   { key: "built", label: "What I built" },
@@ -29,6 +39,8 @@ export function CaseStudyModal({
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  const { mode } = useViewMode();
+  const blocks = mode === "recruiter" ? RECRUITER_BLOCKS : TECHNICAL_BLOCKS;
   useFocusTrap(Boolean(project), panelRef, onClose);
 
   return (
@@ -82,7 +94,7 @@ export function CaseStudyModal({
         </p>
 
         <dl className="mt-8 space-y-7">
-          {BLOCKS.map((block) => (
+          {blocks.map((block) => (
             <div key={block.key}>
               <dt className="u-mono text-2xs uppercase tracking-[0.28em] text-accent-ink">
                 {block.label}

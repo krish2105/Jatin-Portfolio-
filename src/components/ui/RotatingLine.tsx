@@ -53,7 +53,13 @@ export function RotatingLine({ items }: { items: readonly string[] }) {
           {/* Sizer — establishes the box in the real font, never painted. */}
           <span className="invisible block whitespace-nowrap">{longest}</span>
 
-          <AnimatePresence mode="wait" initial={false}>
+          {/* No `mode="wait"`. With it, the outgoing word finished leaving
+              before the incoming one started, so the brackets sat visibly
+              empty for the length of the transition on every cycle. Letting
+              them overlap is also what a mask reveal actually is: one word
+              rides up as the next rides in. Both are absolutely positioned,
+              so they occupy the same slot. */}
+          <AnimatePresence initial={false}>
             <motion.span
               key={items[index]}
               className="absolute inset-0 flex items-center whitespace-nowrap text-accent-ink"

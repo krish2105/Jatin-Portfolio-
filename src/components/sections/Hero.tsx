@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import { ArrowDown, Download } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 
 import { contact, hero, profile, siteMeta } from "@/data/portfolio";
 import { HeroLattice } from "@/components/three/HeroLattice";
 import { PrimaryCta } from "@/components/ui/PrimaryCta";
 import { RotatingLine } from "@/components/ui/RotatingLine";
 import { PRELOADER_MS } from "@/components/ui/Preloader";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 /* The entrance is choreographed to begin as the preloader lifts, so the two

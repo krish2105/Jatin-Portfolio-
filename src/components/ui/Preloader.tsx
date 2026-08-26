@@ -1,16 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  AnimatePresence,
-  animate,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useTransform,
-} from "motion/react";
+import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "motion/react";
 
 import { profile } from "@/data/portfolio";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /** Total time on screen, including the lift. The brief caps this at 1.4s. */
 export const PRELOADER_MS = 1400;
@@ -61,10 +55,14 @@ export function Preloader() {
     <AnimatePresence>
       {!done && (
         <motion.div
-          className="fixed inset-0 z-[300] grid place-items-center bg-ground px-gutter"
+          className="preloader-root fixed inset-0 z-[300] grid place-items-center bg-ground px-gutter"
           exit={{ y: "-101%" }}
           transition={{ duration: 0.75, ease: [0.76, 0, 0.24, 1] }}
           aria-hidden
+          /* Once the timer has fired the overlay is on its way out and must
+             never intercept a click, even if its exit animation stalls (a
+             backgrounded tab throttles rAF and can leave it mid-flight). */
+          style={{ pointerEvents: done ? "none" : "auto" }}
         >
           <svg
             viewBox="0 0 900 130"

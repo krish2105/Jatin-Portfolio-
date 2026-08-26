@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { ticker } from "@/data/portfolio";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /**
  * Seamless marquee: the list is rendered twice and the track travels exactly

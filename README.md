@@ -10,8 +10,7 @@ vision (depth maps, point clouds, thermal teal), geometry borrowed from
 Rajasthani jaali lattice work, and the typographic discipline of financial
 ledgers and ERP interfaces.
 
-> **Status: in progress.** Phase 1 (foundation) is complete. Sections, the 3D
-> hero and motion are still being built — see [Roadmap](#roadmap).
+Live: <https://jatin-portfolio-krishnamathur008-1499s-projects.vercel.app>
 
 ---
 
@@ -177,17 +176,56 @@ After the first production deploy, set the real domain in `siteMeta.url`
 
 ---
 
+## The hero scene
+
+One React Three Fiber particle system, ~9,500 points (~2,800 on low-power
+devices), doing four things:
+
+1. **At rest** — the points settle into a jaali lattice and rotate on Y at
+   0.05 rad/s. Structural edges emit brass; field points are teal.
+2. **Cursor as depth sensor** — points near the pointer displace along +Z with
+   a smooth falloff, like a depth map responding to a hand entering frame.
+   After 4s without pointer movement a slow ambient wave takes over.
+3. **CTA hover** — the lattice morphs into a wireframe hand in a pinch
+   gesture, a callback to the Virtual Mouse project. Focus triggers it too, so
+   keyboard users get the same moment.
+4. **Scroll** — the camera dollies back and the field disperses into a sparse
+   ambient backdrop.
+
+All four are GPU-side: the morph is a lerp between two position buffers and
+the geometry is never rebuilt. The lattice and the SVG fallback are generated
+by the same code (`latticeGeometry.ts`), so they are one object drawn two
+ways.
+
+### When the 3D does not run
+
+| Condition | Result |
+|---|---|
+| No WebGL | Static SVG lattice |
+| `prefers-reduced-motion` | Static SVG, no float animation |
+| Frame time > 20ms for 2s | Drops to the SVG, permanently for that page load |
+| `hardwareConcurrency <= 4` or `deviceMemory <= 4` | 3D at 3,000 points, no cursor displacement |
+| Hero scrolled out of view | Scene unmounted, WebGL context released |
+| `document.hidden` | Render loop paused |
+
+`dpr` is capped at `[1, 2]`. The scene is `next/dynamic` with `ssr: false`, so
+it is not in the initial bundle and first paint never waits on it.
+
+The watchdog ignores frames longer than 100ms: a backgrounded tab has its rAF
+throttled to a few frames a second, and counting those would permanently
+degrade the hero for anyone who switched tabs and came back.
+
 ## Roadmap
 
 - [x] **Phase 1** — scaffold, design tokens, fonts, theme system, all content in `portfolio.ts`
-- [ ] **Phase 2** — every section, static and correct, in both themes
-- [ ] **Phase 3** — the R3F jaali particle scene, fallback path first
-- [ ] **Phase 4** — orchestrated motion
-- [ ] **Phase 5** — accessibility and quality pass
+- [x] **Phase 2** — every section, static and correct, in both themes
+- [x] **Phase 3** — the R3F jaali particle scene, fallback path verified first
+- [x] **Phase 4** — orchestrated motion
+- [x] **Phase 5** — accessibility and quality pass
 
 ## Accessibility floor
 
-Non-negotiable, and checked before the site is called done:
+Verified against the running production build, not assumed:
 
 - Semantic HTML, one `<h1>`, correct heading hierarchy, real landmarks
 - Skip link, visible `:focus-visible` rings globally, logical tab order
@@ -199,3 +237,33 @@ Non-negotiable, and checked before the site is called done:
 - Only `transform` and `opacity` animate on scroll
 - `backdrop-filter` on the nav only
 - Works down to 360px with no horizontal scroll; all tap targets ≥ 44×44px
+
+
+## Notes for whoever picks this up
+
+**`useReducedMotion` is ours, not Motion's** (`src/hooks/useReducedMotion.ts`).
+Motion's version reads the media query during the first client render, which
+the server cannot match — every component that branched on it produced a
+different tree than the HTML the server sent, React threw a hydration error
+and rebuilt the document, and the `data-theme` attribute set by the pre-paint
+script went with it. Reduced-motion users got the wrong theme and an empty
+theme toggle. Ours is built on `useSyncExternalStore`, which is the supported
+way to read browser-only state during SSR. Please do not swap it back.
+
+**`ThemeGuard`** re-asserts `data-theme` after hydration. It costs one
+attribute write and makes the failure above impossible even if some future
+component reintroduces a mismatch.
+
+**The pinch signal is a DOM attribute**, not a module variable
+(`src/lib/heroSignals.ts`). The CTA lives in the main chunk and the scene in a
+lazily imported one; when the bundler inlined the shared module into both,
+each got its own copy and the signal silently never arrived — in the
+production build only.
+
+**The Builds track measures against its clipping viewport**, not itself. It is
+`w-max` on desktop, so its own `scrollWidth` and `clientWidth` are always
+equal and the travel distance came out as zero.
+
+**`overflow-x: clip` has to sit on `<html>`**, not only `<body>`. The Builds
+swipe gallery is a nested horizontal scroller whose content still reached the
+viewport scroll box, and the page scrolled sideways at 360px.

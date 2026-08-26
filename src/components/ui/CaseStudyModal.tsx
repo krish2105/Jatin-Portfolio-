@@ -1,12 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 
 import type { BuildProject } from "@/types/portfolio";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { GitHubMark } from "./BrandIcons";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const BLOCKS = [
   { key: "problem", label: "The problem" },

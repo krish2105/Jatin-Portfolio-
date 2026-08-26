@@ -7,6 +7,7 @@ import { noFlashScript } from "@/lib/theme";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Preloader } from "@/components/ui/Preloader";
 import { Cursor } from "@/components/ui/Cursor";
+import { ThemeGuard } from "@/components/ui/ThemeGuard";
 import { profile, siteMeta } from "@/data/portfolio";
 import "./globals.css";
 
@@ -133,6 +134,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <ThemeGuard />
         <Preloader />
         <Cursor />
         <SmoothScroll>{children}</SmoothScroll>

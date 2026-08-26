@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const INTERVAL_MS = 2600;
 
@@ -16,6 +17,12 @@ const INTERVAL_MS = 2600;
 export function RotatingLine({ items }: { items: readonly string[] }) {
   const reduce = useReducedMotion();
   const [index, setIndex] = useState(0);
+
+  /* The box is clipped to make the mask reveal work, so it has to be wide
+     enough for the longest word or that word is silently truncated — which is
+     exactly what happened to "ERP implementations". Derived from the data so
+     it cannot drift when the copy changes. */
+  const widthCh = Math.max(...items.map((item) => item.length)) + 1;
 
   useEffect(() => {
     if (reduce || items.length < 2) return;
@@ -40,7 +47,7 @@ export function RotatingLine({ items }: { items: readonly string[] }) {
         <span
           aria-hidden
           className="relative block h-[1.5em] overflow-hidden"
-          style={{ minWidth: "17ch" }}
+          style={{ minWidth: `${widthCh}ch` }}
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.span

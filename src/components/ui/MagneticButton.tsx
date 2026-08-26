@@ -1,15 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-} from "motion/react";
+import { motion, useMotionValue, useSpring } from "motion/react";
 
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /** How much of the cursor's offset the button follows. */
 const PULL = 0.32;

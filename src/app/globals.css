@@ -265,6 +265,15 @@
    Preloader — the name draws itself in stroke.
    -------------------------------------------------------------------------- */
 
+/* Hidden in CSS as well as in JS. The JS branch alone would let the overlay
+   paint for a single frame during hydration before the reduced-motion value
+   resolves; a media query is evaluated before that frame exists. */
+@media (prefers-reduced-motion: reduce) {
+  .preloader-root {
+    display: none !important;
+  }
+}
+
 .preloader-name {
   font-family: var(--font-display);
   font-size: 92px;

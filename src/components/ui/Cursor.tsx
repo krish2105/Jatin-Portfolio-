@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { motion, useMotionValue, useSpring } from "motion/react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /**
  * A small ring that trails the pointer and opens up over anything

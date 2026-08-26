@@ -2,12 +2,12 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useReducedMotion } from "motion/react";
 
 import { useWebGL } from "@/hooks/useWebGL";
 import { useLowPower } from "@/hooks/useLowPower";
 import { StaticLattice } from "./StaticLattice";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /* The entire R3F scene is lazy-loaded and never server-rendered, so it is not
    in the initial bundle and first paint never waits on it.

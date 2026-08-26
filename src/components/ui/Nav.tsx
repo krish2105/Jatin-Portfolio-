@@ -41,7 +41,7 @@ export function Nav() {
                       href={item.href}
                       aria-current={isActive ? "true" : undefined}
                       className={cn(
-                        "flex items-baseline gap-2 rounded-full px-3 py-2 text-sm transition-colors",
+                        "flex min-h-[44px] items-center gap-2 rounded-full px-3 text-sm transition-colors",
                         isActive
                           ? "text-text"
                           : "text-muted hover:text-text",

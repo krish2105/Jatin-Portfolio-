@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { navItems, profile } from "@/data/portfolio";
 import { JaaliGlyph } from "./JaaliGlyph";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /**
  * Full-screen navigation for narrow viewports. A real dialog: focus trapped,

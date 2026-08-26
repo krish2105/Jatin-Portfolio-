@@ -1,16 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-} from "motion/react";
+import { motion, useMotionTemplate, useMotionValue, useSpring } from "motion/react";
 
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const HEIGHT = 1000;
 /** How far the line can bow toward the cursor, in viewBox units. */

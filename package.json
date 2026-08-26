@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "resume": "node --experimental-strip-types scripts/build-resume.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",

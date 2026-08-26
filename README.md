@@ -172,13 +172,39 @@ cwebp -q 82 -m 6 -mt _assets/portrait-source.png -o public/portrait.webp
 Update the alt text in `siteMeta.portraitAlt` whenever the portrait changes —
 it describes the image content, not the filename.
 
-> ### ⚠️ The resume PDF is out of date
->
-> `public/resume/Jatin_Acharya_Resume.pdf` still describes Jatin as a *"Senior
-> Undergraduate"* with an *"Expected 2025"* graduation, does not list the Pune
-> role at EPIQ Softech, and carries the unsourced percentage claims this site
-> deliberately drops. **Replace this file before sharing the site.** It is a
-> single-file swap — the path and the CTA do not change.
+## The resume
+
+Two one-page PDFs, both generated from `src/data/portfolio.ts`:
+
+```bash
+npm run resume
+```
+
+| File | Aimed at |
+|---|---|
+| `Jatin_Acharya_Resume.pdf` | NetSuite / ERP consultant roles. Served by the site's download button. |
+| `Jatin_Acharya_Resume_ERP_ML.pdf` | ERP-adjacent AI, data and automation roles. Send manually. |
+
+They differ only in the summary and in whether NetSuite scope or project work
+takes the higher position — the facts are identical because they come from the
+same file the website renders. **Edit `portfolio.ts` and re-run `npm run
+resume`; do not edit the PDFs.** That is the whole point: the resume and the
+site cannot drift.
+
+Rendered with headless Chrome rather than a PDF library, so the text is real
+and selectable. Single column, standard section headings, no layout tables —
+an applicant-tracking parser reads it correctly, which matters more on a
+resume than art direction. Verified with `pdftotext`.
+
+Deliberately absent: the unsourced percentage claims ("40% reduction", "30%
+accuracy improvement") from the old resume, and the phone number — this PDF is
+downloadable from a public site, so anything on it is crawlable, and a
+recruiter will email first.
+
+**No certifications section.** Jatin holds no NetSuite certification yet, and
+padding one in would be worse than leaving it out. The usual functional path is
+**SuiteFoundation** followed by **NetSuite Certified ERP Consultant**; either
+would be the single highest-leverage addition to this document.
 
 ---
 

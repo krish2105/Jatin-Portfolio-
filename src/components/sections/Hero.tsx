@@ -70,13 +70,13 @@ export function Hero() {
 
             <div
               style={at(0.6)}
-              className="hero-rise mt-9 flex flex-wrap items-center gap-3"
+              className="hero-rise mt-9 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
             >
               <PrimaryCta href="#delivery">{hero.ctaPrimary}</PrimaryCta>
               <a
                 href={contact.resume}
                 download
-                className="inline-flex min-h-[48px] items-center gap-2.5 rounded-card border border-edge px-6 text-sm text-text transition-colors hover:border-accent hover:text-accent-ink"
+                className="inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-card border border-edge px-6 text-sm text-text transition-colors hover:border-accent hover:text-accent-ink"
               >
                 {hero.ctaSecondary}
                 <Download aria-hidden size={16} strokeWidth={1.6} />

@@ -10,7 +10,7 @@ vision (depth maps, point clouds, thermal teal), geometry borrowed from
 Rajasthani jaali lattice work, and the typographic discipline of financial
 ledgers and ERP interfaces.
 
-Live: <https://jatin-portfolio-krishnamathur008-1499s-projects.vercel.app>
+Live: <https://jatin-acharya.vercel.app>
 
 ---
 

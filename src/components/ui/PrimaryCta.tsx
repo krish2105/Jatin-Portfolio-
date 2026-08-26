@@ -22,7 +22,7 @@ export function PrimaryCta({
       onMouseLeave={() => setPinching(false)}
       onFocus={() => setPinching(true)}
       onBlur={() => setPinching(false)}
-      className="inline-flex min-h-[48px] items-center gap-2.5 rounded-card bg-accent-solid px-6 text-sm font-medium text-accent-on transition-opacity hover:opacity-90"
+      className="inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-card bg-accent-solid px-6 text-sm font-medium text-accent-on transition-opacity hover:opacity-90"
     >
       {children}
       <ArrowUpRight aria-hidden size={16} strokeWidth={2} />

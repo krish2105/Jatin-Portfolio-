@@ -70,8 +70,14 @@ export function CommandPalette() {
         openPalette();
       }
     };
+    const onRequest = () => openPalette();
+
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("vision-mesh:palette", onRequest);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("vision-mesh:palette", onRequest);
+    };
   }, [open, close, openPalette]);
 
   const copy = useCallback(async (text: string, message: string) => {

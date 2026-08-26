@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { navItems, profile } from "@/data/portfolio";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,10 @@ export function Nav() {
             aria-label={`${profile.name} — back to top`}
           >
             <JaaliGlyph className="text-accent-ink" />
-            <span className="u-mono hidden text-2xs uppercase tracking-[0.28em] text-text sm:block">
+            {/* Visible at every width. This link is the only place the name
+                appears in the chrome, and a portfolio opened on a phone that
+                shows nothing but an abstract glyph does not say whose it is. */}
+            <span className="u-mono whitespace-nowrap text-2xs uppercase tracking-[0.2em] text-text sm:tracking-[0.28em]">
               {profile.name}
             </span>
           </a>
@@ -66,6 +69,19 @@ export function Nav() {
 
           <div className="flex shrink-0 items-center gap-2">
             <ViewModeToggle className="hidden xl:inline-flex" />
+            {/* Without a visible trigger the palette is undiscoverable — a
+                keyboard shortcut nobody is told about helps nobody. */}
+            <button
+              type="button"
+              onClick={() =>
+                window.dispatchEvent(new CustomEvent("vision-mesh:palette"))
+              }
+              aria-label="Open command palette"
+              className="hidden min-h-[44px] items-center gap-2 rounded-pill border border-edge px-3.5 text-muted transition-colors hover:border-accent hover:text-accent-ink lg:inline-flex"
+            >
+              <Search aria-hidden size={14} strokeWidth={1.8} />
+              <kbd className="u-mono text-2xs">⌘K</kbd>
+            </button>
             <ThemeToggle />
             <button
               type="button"

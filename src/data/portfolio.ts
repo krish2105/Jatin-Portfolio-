@@ -445,7 +445,7 @@ export const navItems: readonly NavItem[] = [
 export const siteMeta = {
   // Change this when a custom domain is attached — canonical URL, Open Graph,
   // JSON-LD and sitemap.xml all derive from it.
-  url: "https://jatin-portfolio-krishnamathur008-1499s-projects.vercel.app",
+  url: "https://jatin-acharya.vercel.app",
   title: `${profile.name} — ${profile.role}`,
   description:
     "Oracle NetSuite Functional Consultant in Pune. End-to-end ERP implementations across Financials, Order to Cash, Procure to Pay and Inventory — plus applied machine learning and computer vision.",
